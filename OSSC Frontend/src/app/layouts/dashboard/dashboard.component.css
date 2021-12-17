@@ -1,0 +1,21 @@
+p{
+    text-align: center;
+    margin-top: 20%;
+    font-size: xxx-large;
+    color: red;
+    animation: text 4s ease-in-out infinite;
+}
+@keyframes text{
+    0%{
+        transform: scale(0.9);
+    }
+    25%{
+        transform: scale(1.2);
+    }
+    60%{
+        transform: scale(0.9);
+    }
+    100%{
+        transform: scale(0.9);
+    }
+}

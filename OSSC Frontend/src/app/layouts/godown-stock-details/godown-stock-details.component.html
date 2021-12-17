@@ -1,0 +1,386 @@
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Godown Stock Details</h4>
+            <p class="card-category">Select the fields</p>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3">
+                <mat-form-field appearance='fill'>
+                  <mat-label>Select Godown</mat-label>
+                  <mat-select [(value)]="selected">
+                    <mat-option *ngFor="let godown of godowns" [value]='godown.godown_ID'
+                      (click)="allCrops(godown.godown_Name)">
+                      {{godown.godown_Name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance='fill'>
+                  <mat-label>Select Crop</mat-label>
+                  <mat-select [(value)]="cropSelect">
+                    <mat-option (click)='cropSelectAll();showCheckBox()' [value]='selectAll'>Select all</mat-option>
+                    <mat-option *ngFor="let crops of allStocksForCrop" [value]='crops.crop'
+                      (click)="cropSelected(crops.crop);showCheckBox()">
+                      {{crops.cropName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance='fill'>
+                  <mat-label>Select Variety</mat-label>
+                  <mat-select [(value)]="varietySelect" [disabled]='cropSelectAllOption'>
+                    <mat-option (click)='varietyClassSelectAll()' [value]='selectAll'>Select All</mat-option>
+                    <mat-option *ngFor="let variety of stocksForVariety" [value]='variety.variety'
+                      (click)='varietySelected(variety.variety)'>
+                      {{variety.varietyName}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance='fill'>
+                  <mat-label>Select Class</mat-label>
+                  <mat-select [(value)]="selectedClass">
+                    <mat-option (click)='classSelectAllData()' [value]='selectAll'>Select All
+                    </mat-option>
+                    <mat-option *ngFor="let sfc of stocksForClass" [value]='sfc'>
+                      {{sfc}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance='fill'>
+                  <mat-label>Select Circle</mat-label>
+                  <mat-select [(value)]="selectedCircle">
+                    <mat-option (click)='showCheckBox()' [value]='AllCircle'>All
+                    </mat-option>
+                    <mat-option (click)="showCheckBox()" [value]='InterCircle'>
+                      Inter Circle
+                    </mat-option>
+                    <mat-option (click)="showCheckBox()" [value]='IntraCircle'>Intra Circle</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <div class="chkbox" *ngIf="showChkBox">
+
+            <div class="row" id='allCheck'>
+              <div class="col-md-4">
+                Received stock <input type="checkbox" id='chck1' class="check1" name='same' [(ngModel)]="isChecked1"
+                  (change)="receivedStock(isChecked1?'true':'false');tableShowHide()">
+              </div>
+              <div class="col-md-4">
+                Dispatched stock <input type="checkbox" id='chck2' class="check2" name='same' [(ngModel)]="isChecked2"
+                  (change)="stockDispatched(isChecked2?'true':'false');tableShowHide()">
+              </div>
+              <div class="col-md-4">
+                Total stock <input type="checkbox" id='chck3' class="check3" name='same' [(ngModel)]="isChecked3"
+                  (change)="totalStockAvailable(isChecked3?'true':'false');tableShowHide()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center" *ngIf="tableShow">
+      <div class="col-md-8">
+        <div class="card">
+
+          <!-- ===============================================Received Stock Details=============================================================== -->
+
+
+          <div class="card-body shadow" *ngIf="tbodyForReceived">
+
+            <div class="row justify-content-center">
+              <div class="row headColor">
+
+                <!-- Search button start -->
+                <div class="col-md-4">
+                  <div class="search-box">
+                    <i class="material-icons">search</i>
+                    <input type="text" class="search-txt" name="" placeholder="search by any field"
+                      onfocus="this.placeholder = ''" onblur="this.placeholder = 'search by any field'"
+                      [(ngModel)]='searchLot'>
+                    <!-- <a class="search-btn">
+                      <i class="material-icons" >search</i>
+                    </a> -->
+                  </div>
+                </div>
+                <!-- Search button end-->
+
+
+                <div class="col-md-4 heading">
+
+                  <h3>Stock Received</h3>
+                </div>
+              </div>
+
+              <!-- <div class="row" style="justify-content: flex-end;">
+                <div class="dropdown show" *ngIf="tbodyForReceived">
+                  <a style="background-color: bisque;" class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                    id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sort By
+                  </a>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" (click)='sortByYearReceived()'>Year</a>
+                    <a class="dropdown-item">Season</a>
+                  </div>
+                </div>
+              </div> -->
+
+              <div class="table-responsive borderBottom" *ngIf='!godownStockDetails?.length==0'>
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Season </th>
+                      <th>Crop </th>
+                      <th>Variety</th>
+                      <th>Class</th>
+                      <th>Lot Number</th>
+                      <th>Godown Name</th>
+                      <th>Intake Date</th>
+                      <th>Number of Bags</th>
+                      <th>Bag size(In KG)</th>
+                      <th>Quintals</th>
+                      <!-- <th>PR Number</th> -->
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                    <tr
+                      *ngFor="let seed of godownStockDetails | filter:searchLot | paginate: { itemsPerPage: 10, currentPage: p }">
+                      <td>{{seed.year}}</td>
+                      <td>{{seed.season}}</td>
+                      <td>{{seed.cropName}}</td>
+                      <td>{{seed.varietyName}}</td>
+                      <td>{{seed.class}}</td>
+                      <td>{{seed.lot_Number}}</td>
+                      <td>{{seed.sourceGodownName}}</td>
+                      <td>{{seed.date_Intake|date:'dd/MM/yyyy'}}</td>
+                      <td>{{seed.no_of_Bag}}</td>
+                      <td>{{seed.qty_Per_Bag_Kg}}</td>
+                      <td>{{seed.no_of_Bag|quintals:seed.qty_Per_Bag_Kg}}</td>
+                      <!-- <td>{{seed.pr_Number}}</td> -->
+
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="card-footer" *ngIf='godownStockDetails?true:false'>
+                <pagination-controls class="my-pagination text-center" (pageChange)="p = $event">
+                </pagination-controls>
+              </div>
+
+            </div>
+            <div class="row justify-content-center">
+              <div *ngIf='!godownStockDetails?true:false' class="noData">
+                <p>No Data</p>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- ===============================================Dispatched Stock Details=============================================================== -->
+
+
+
+          <div class="card-body shadow" *ngIf="tbodyForDispatched">
+
+            <div class="row justify-content-center">
+              <div class="row  headColor">
+
+                <!-- Search button start -->
+                <div class="col-md-4">
+                  <div class="search-box">
+                    <i class="material-icons">search</i>
+                    <input type="text" class="search-txt" name="" placeholder="search by any field"
+                      onfocus="this.placeholder = ''" onblur="this.placeholder = 'search by any field'"
+                      [(ngModel)]='searchLot'>
+                    <!-- <a class="search-btn">
+                      <i class="material-icons" >search</i>
+                    </a> -->
+                  </div>
+                </div>
+                <!-- Search button end-->
+                <div class="col-md-4 heading">
+                  <h3>Stock Dispatched</h3>
+
+                </div>
+
+              </div>
+
+              <!-- <div class="dropdown show" *ngIf="tbodyForDispatched" style="justify-content: right;">
+                <a style="background-color: bisque;" class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                  id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Sort By
+                </a>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                  <a class="dropdown-item" (click)='sortByYearDispatched()'>Year</a>
+                  <a class="dropdown-item">Season</a>
+                </div>
+              </div> -->
+
+              <div class="table-responsive borderBottom" *ngIf='!stockDispatchedData?.length==0'>
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Year</th>
+                      <th>Season </th>
+                      <th>Crop </th>
+                      <th>Variety</th>
+                      <th>Class</th>
+                      <th>Lot Number</th>
+                      <th>To</th>
+                      <th>Dispatch Date</th>
+                      <th>Number of Bags</th>
+                      <th>KG per bag</th>
+                      <!-- <th>PR Number</th> -->
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr
+                      *ngFor="let seed of stockDispatchedData | filter:searchLot | paginate: { itemsPerPage: 10, currentPage: p } ">
+                      <td>{{seed.year}}</td>
+                      <td>{{seed.season}}</td>
+                      <td>{{seed.cropName}}</td>
+                      <td>{{seed.varietyName}}</td>
+                      <td>{{seed.class}}</td>
+                      <td>{{seed.lot_Number}}</td>
+                      <td>{{seed.destinGodownName}}</td>
+                      <td>{{seed.stockTrnsDate |date:'dd/MM/yyyy'}}</td>
+                      <td>{{seed.no_of_Bag}}</td>
+                      <td>{{seed.qty_Per_Bag_Kg}}</td>
+                      <!-- <td>{{seed.pr_Number}}</td> -->
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="card-footer" *ngIf='stockDispatchedData?true:false'>
+                <pagination-controls class="my-pagination text-center" (pageChange)="p = $event">
+                </pagination-controls>
+              </div>
+
+            </div>
+            <div class="row justify-content-center">
+              <div *ngIf='!stockDispatchedData?true:false' class="noData">
+                <p>No Data</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===============================================Total Stock Details=============================================================== -->
+
+          <div class="card-body shadow" *ngIf="tbodyForTotal">
+
+            <div class="row justify-content-center">
+              <div class="row  headColor">
+
+                <!-- Search button start -->
+                <div class="col-md-4">
+                  <div class="search-box">
+                    <i class="material-icons">search</i>
+                    <input type="text" class="search-txt" name="" placeholder="search by any field"
+                      onfocus="this.placeholder = ''" onblur="this.placeholder = 'search by any field'"
+                      [(ngModel)]='searchLot'>
+                    <!-- <a class="search-btn">
+                      <i class="material-icons" >search</i>
+                    </a> -->
+                  </div>
+                </div>
+                <!-- Search button end-->
+
+                <div class="col-md-4 heading">
+                  <h3>Total Stock</h3>
+
+                </div>
+              </div>
+
+              <div class="table-responsive" *ngIf='!stockAvailablePerLotData?.length==0'>
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>Godown</th>
+                      <!-- <th>Year</th> -->
+                      <th>Season </th>
+                      <th>Crop </th>
+                      <th>Variety</th>
+                      <th>Class</th>
+                      <th>Lot Number</th>
+                      <th>No. of bags available</th>
+                      <th>KG per bag</th>
+                      <!-- <th>PR Number</th> -->
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    <tr
+                      *ngFor="let seed of stockAvailablePerLotData | filter:searchLot | paginate: { itemsPerPage: 10, currentPage: p } ">
+                      <!-- <td>{{seed._id.receiver_ID}}</td> -->
+                      <!-- <td>{{seed._id.year}}</td> -->
+                      <td>{{godownName}}</td>
+                      <td>{{seed._id.season}}</td>
+                      <td>{{seed._id.cropName}}</td>
+                      <td>{{seed._id.varietyName}}</td>
+                      <td>{{seed._id.class}}</td>
+                      <td>{{seed._id.lot_Number}}</td>
+                      <td>{{seed.availableBag}}</td>
+                      <td>{{seed._id.qty_Per_Bag_Kg}}</td>
+                      <!-- <td>{{seed._id.pr_Number}}</td> -->
+                    </tr>
+
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="card-footer" *ngIf='stockAvailablePerLotData?true:false'>
+                <pagination-controls class="my-pagination text-center" (pageChange)="p = $event">
+                </pagination-controls>
+              </div>
+
+            </div>
+            <div class="row justify-content-center">
+              <div *ngIf='!stockAvailablePerLotData?true:false' class="noData">
+                <p>No Data</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- <mat-progress-bar *ngIf='godownStockDetails ||stockDispatchedData||stockAvailablePerLotData'
+            mode="indeterminate">
+          </mat-progress-bar> -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================Loader view start============================================================ -->
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+<!-- ===================================Loader view end============================================================ -->

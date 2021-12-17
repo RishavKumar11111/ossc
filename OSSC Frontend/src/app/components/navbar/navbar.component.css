@@ -1,0 +1,15 @@
+.navbar-brand{
+    font-weight: 800;
+    font-size: larger;
+    color: crimson;
+}
+.navbar-wrapper a{
+    margin-left: 26px;
+}
+
+@media only screen and (min-width: 600px) {
+.navbar-toggle span{
+    display: none;
+    border: none;
+}
+}

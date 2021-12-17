@@ -1,0 +1,116 @@
+<head>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"></script>
+</head>
+
+<div class="logo">
+    <!-- <div class="logo-img">
+            <img src='../sidebar/img/ossclogo.png'>
+        </div> -->
+    OSSC
+
+</div>
+<div class="sidebar-wrapper">
+    <div *ngIf="isMobileMenu()">
+        <ul class="nav navbar-nav nav-mobile-menu">
+
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:void(0)">
+                    <!-- <i class="material-icons">person</i>
+                    <p>
+                        <span class="d-lg-none d-md-block">Account</span>
+                    </p> -->
+                </a>
+            </li>
+        </ul>
+    </div>
+    <ul class="nav">
+        <li routerLinkActive="active" class="nav-item">
+            <a class="nav-link" routerLink="/user/dashboard">
+                <i class="material-icons">dashboard</i>
+                <p>Dashboard</p>
+            </a>
+        </li>
+
+
+        <!-- ===========================below userRole='spo'======================= -->
+        <div *ngIf="userRole=='spo'">
+            <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+                <a class="nav-link" [routerLink]="[menuItem.path]">
+                    <i class="material-icons">{{menuItem.icon}}</i>
+                    <p>{{menuItem.title}}</p>
+                </a>
+            </li>
+        </div>
+        <!-- ===========================below userRole='admin'======================= -->
+        <li routerLinkActive="active" class="nav-item" *ngIf="userRole=='admin'">
+            <a class="nav-link" routerLink="/user/lot-fail">
+                <i class="material-icons">dashboard</i>
+                <p>Lot Fail</p>
+            </a>
+        </li>
+
+        <li routerLinkActive="active">
+            <a class="nav-link" (click)='reportDropdown()' class="reportButton"><i
+                    class="material-icons">receipt_long</i>
+                <p>Report</p><span class="fa fa-arrow-up"></span>
+            </a>
+            <!-- ===========================below userRole='spo'======================= -->
+
+            <ul class="rprtShow">
+                <li routerLinkActive="active" class="nav-item" *ngIf="userRole=='spo'">
+                    <a routerLink="/user/report/godown-stock-details">
+                        <i class="material-icons submenu">
+                            store
+                        </i>
+                        Godown Stock Details
+                    </a>
+                </li>
+                <!-- ===========================below userRole='spo'======================= -->
+
+                <li routerLinkActive="active" class="nav-item" *ngIf="userRole=='spo'">
+                    <a routerLink="/user/report/stock-in-transit">
+                        <i class="material-icons submenu">
+                            moped
+                        </i>
+                        Stock In Transit
+                    </a>
+                </li>
+                <li routerLinkActive="active" class="nav-item">
+                    <a routerLink="/user/report/stock-inward-statement">
+                        <i class="material-icons submenu">
+                            arrow_right_alt
+                        </i>
+                        Stock Inward
+                    </a>
+                </li>
+
+                <li routerLinkActive="active" class="nav-item"><a routerLink="/user/report/stock-outward-statement">
+                        <i class="material-icons submenu">
+                            keyboard_backspace
+                        </i>
+                        Stock Outward</a>
+                </li>
+                <!-- ===========================below userRole='spo'======================= -->
+                <li routerLinkActive="active" class="nav-item" *ngIf="userRole=='spo'">
+                    <a routerLink='/user/report/returned-after-sale'>
+                        <i class="material-icons submenu">
+                            arrow_right_alt
+                        </i>
+                        Returned After Sale
+                    </a>
+                </li>
+                <!-- ===========================below userRole='spo'======================= -->
+                <li routerLinkActive="active" class="nav-item" *ngIf="userRole=='spo'">
+                    <a routerLink='/user/report/returned-after-purchase'>
+                        <i class="material-icons submenu">
+                            keyboard_backspace
+                        </i>
+                        Returned After Purchase
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+    </ul>
+</div>

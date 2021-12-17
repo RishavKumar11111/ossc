@@ -1,0 +1,28 @@
+/* .mat-toolbar{
+    z-index: 1000;
+    position: sticky;
+    top: 0;
+}
+.mat-toolbar.mat-primary {
+    
+    color: #fff;
+    background: cadetblue;
+} */
+
+mat-toolbar span{
+    font-size: xx-large;
+    font-weight: 700;
+}
+
+.logoutBtn{
+    background-color:#264a43;
+    border-radius: 50px;
+}
+
+.mat-toolbar.mat-primary {
+    background: cadetblue;
+    color: #fff;
+    z-index: 1000;
+    top: 0;
+    position: sticky;
+}

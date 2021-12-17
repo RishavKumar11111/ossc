@@ -1,0 +1,268 @@
+<div class="main-content" *ngIf='printData'>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- <div class="col-md-6">
+                <button mat-raised-button class="btn btn-success" (click)='transitDataDispatch()'>Transfer In
+                    Transit</button>
+            </div>
+            <div class="col-md-6">
+                <button mat-raised-button class="btn btn-success" (click)='transitDataReceive()'>Receive In
+                    Transit</button>
+            </div> -->
+            <div class="col-md-8">
+                <h2>Stock In Transit</h2>
+            </div>
+            <!-- <div class="col-md-4">
+                <button mat-raised-button (click)="exportAsXLSX()">Export as Excel</button>
+                &nbsp;&nbsp;<button mat-raised-button (click)="printAction('printData')">Print</button>
+            </div> -->
+        </div>
+
+        <div class="row cardView">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Stock In Transit</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="table-responsive" id='printData'>
+                                <table class="table table-bordered table-striped print-container" *ngIf="showCardData">
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>Season </th>
+                                            <th>Crop </th>
+                                            <th>Variety</th>
+                                            <th>Class</th>
+                                            <th>Lot Number</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Dispatch Date</th>
+                                            <th>Number of Bags</th>
+                                            <th>KG per bag</th>
+                                            <!-- <th>PR Number</th> -->
+                                            <th>Status</th>
+                                            <th>Reprint</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of transitData ">
+                                            <td>{{data.year}}</td>
+                                            <td>{{data.season}}</td>
+                                            <td>{{data.cropName}}</td>
+                                            <td>{{data.varietyName}}</td>
+                                            <td>{{data.class}}</td>
+                                            <td>{{data.lot_Number}}</td>
+                                            <td>{{data.sourceGodownName}}</td>
+                                            <td>{{data.destinGodownName}}</td>
+                                            <td>{{data.stockTrnsDate |date:'dd/MM/yyyy'}}</td>
+                                            <td>{{data.no_of_Bag}}</td>
+                                            <td>{{data.qty_Per_Bag_Kg}}</td>
+                                            <!-- <td>{{data.pr_Number}}</td> -->
+                                            <td style="color: red;    font-size: medium;
+                                            font-weight: 600;">{{data.transitStatus}}</td>
+                                            <td><button style="border-radius: 50px;" (click)="manualPrint(data.commonChallanForGodownTrns)">Challan</button></td>
+                                        </tr>
+                                </table>
+                            </div>
+                            <mat-progress-bar mode="indeterminate" *ngIf='progBar'></mat-progress-bar>
+                            <p *ngIf='noDataShow' class='noData'>{{noData}}</p>
+                        </div>
+
+
+                        <!--Mat Table Added start -->
+                        <!-- <div class="mat-elevation-z8 table-responsive"> -->
+                        <!-- <mat-table [dataSource]='listData' matSort>
+                                <ng-container matColumnDef='Year'>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Year</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.year}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='Season'>
+                                    <mat-header-cell *matHeaderCellDef>Season</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.season}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='crop'>
+                                    <mat-header-cell *matHeaderCellDef>Crop</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.crop}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='variety'>
+                                    <mat-header-cell *matHeaderCellDef>variety</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.variety}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='class'>
+                                    <mat-header-cell *matHeaderCellDef>class</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.class}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='lot_Number'>
+                                    <mat-header-cell *matHeaderCellDef>Lot Number</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.lot_Number}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='sourceGodownName'>
+                                    <mat-header-cell *matHeaderCellDef>From</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.sourceGodownName}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='receiverGodownName'>
+                                    <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.receiverGodownName}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='stockTrnsDate'>
+                                    <mat-header-cell *matHeaderCellDef mat-sort-header>Dispatch Date</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.stockTrnsDate}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='no_of_Bag'>
+                                    <mat-header-cell *matHeaderCellDef>Number of Bags</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.no_of_Bag}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='qty_Per_Bag_Kg'>
+                                    <mat-header-cell *matHeaderCellDef>KG per bag</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.qty_Per_Bag_Kg}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='pr_Number'>
+                                    <mat-header-cell *matHeaderCellDef>PR Number</mat-header-cell>
+                                    <mat-cell *matCellDef='let element'>{{element.pr_Number}}</mat-cell>
+                                </ng-container>
+                                <ng-container matColumnDef='transitStatus'>
+                                    <mat-header-cell *matHeaderCellDef>Status</mat-header-cell>
+                                    <mat-cell *matCellDef='let element' style="color: red;    font-size: medium;
+                                    font-weight: 600;">{{element.transitStatus}}</mat-cell>
+                                </ng-container>
+                                
+                                <mat-header-row *matHeaderRowDef='displayedColumn'></mat-header-row>
+                                <mat-row *matRowDef='let row;columns:displayedColumn'></mat-row>
+                            </mat-table> -->
+                        <!-- </div> -->
+                        <!-- Mat Table Added end-->
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+<div id='headPrint' [hidden]='!headPrintShow'>
+    <div class="row">
+        <div class="col-md-6" style="text-align: center;">
+            <h1>OSSC</h1>
+        </div>
+        <div class="col-md-6">
+            <h3>Date:24/09/2020</h3>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ==================================Print After Stock Transfer Start==================================-->
+
+
+
+<div class="row" [hidden]='true'>
+    <div class="col-md-12 text-right mb-3">
+      <!-- <button class="btn btn-primary" id="download" (click)='downloadPDF()'> download pdf</button> -->
+      <button class="btn btn-primary" (click)='print()'>Print</button>
+    </div>
+  </div>
+  <div [hidden]='true'>
+  
+    <table id='printTable' class="wrapper" cellpadding="0" cellspacing="0">
+      <table class="innerTable" *ngIf='printDataShow'>
+        <tr>
+          <td>
+            <table>
+              <tr>
+                <div class="topHeadDiv">
+                  <p>PAN NO: {{dataForPrint[0].panNo}}</p>
+                  <p>GSTIN NO: {{dataForPrint[0].gstinNo}}</p>
+                </div>
+                <div class="sub-heading"><b><i>Odisha State Seeds Corporation Limited</i></b></div>
+                <small>(A GOVERNMENT UNDER TAKING)</small><br>
+                <small>Regd. Office:Bhubaneswar- 751002</small>
+              </tr><br><br><br>
+              <tr>
+                <td colspan="3" width="500" class="content"><span>Zonal
+                    Office____<u>{{dataForPrint[0].zonalOffice}}</u>_______</span></td>
+                <td width="150" class="content"><span>No: </span></td>
+              </tr>
+            </table>
+            <table>
+              <tr>
+                <div class="sub-heading" align='center'>
+                  <b>MATERIAL TRANSFER CHALLAN</b>
+                </div>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table>
+              <tr>
+                <td width="350" class="content">Book No______________<br>Despatched
+                  from_____<u>{{dataForPrint[0].sourceGodownName}}</u>_________<br>Despatched
+                  to_______<u>{{dataForPrint[0].destinGodownName}}</u>______</td>
+                <td width="200" style="vertical-align: text-top;"></td>
+                <td width="250" class="content">Challan
+                  No_<u>{{dataForPrint[0].commonChallanForGodownTrns}}</u>_<br>Date_____<u>{{dataForPrint[0].stockTrnsDate|date:'dd/MM/yyyy'}}</u>________<br>Vehicle
+                  No_____<u *ngIf='dataForPrint[0].vehicleNO'>{{dataForPrint[0].vehicleNO}}</u>_____</td>
+              </tr>
+            </table>
+  
+            <table style="width: 100%;">
+              <tr>
+                <td>
+                  <table style="width:100%" class="maintbl" cellpadding="0" cellspacing="0">
+                    <thead>
+                      <tr>
+                        <th>Sl.</th>
+                        <th colspan="3">Particulars of Commodity</th>
+                        <th>No. of Unit</th>
+                        <th>Qty per Unit</th>
+                        <th>Total <br> Weight Net <br> Kg./gms/</th>
+                        <th>Remarks <br> condition of Bag Lot No. etc</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr style="height: 114px !important;" *ngFor='let y of dataForPrint;let i=index'>
+                        <td>{{i+1}}</td>
+                        <td style="border-right: none;">&nbsp;</td>
+                        <td style="border-right: none;
+                             border-left: none;">Lot
+                          No:{{y.lot_Number}}<br>Crop:{{y.cropName}}<br>Variety:{{y.varietyName}}
+                        </td>
+                        <td style="border-left: none;">&nbsp;</td>
+                        <td>{{y.no_of_Bag}}</td>
+                        <td>{{y.qty_Per_Bag_Kg}}</td>
+                        <td>{{y.no_of_Bag*y.qty_Per_Bag_Kg}}</td>
+                        <td></td>
+                      </tr>
+                    </tbody>
+                  </table><br>
+                  <table>
+                    <tr>
+                      <td width="350" class="content footerContent">Issued by:{{dataForPrint[0].sourceDist}}
+                        SPO<br>Designation & Date:{{dataForPrint[0].transferDataPushedDate|date:'dd/MM/yyyy'}}</td>
+                      <td width="350" class="content rightContent">Received By:{{dataForPrint[0].destinDist}}
+                        SPO<br>Designation & Date:</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </table>
+  
+  </div>
+  
+  
+  
+  <!-- ==================================Print After Stock Transfer End==================================-->
+  
+  

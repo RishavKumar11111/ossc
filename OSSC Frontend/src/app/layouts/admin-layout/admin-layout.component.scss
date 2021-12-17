@@ -1,0 +1,38 @@
+mat-toolbar span{
+    font-size: xx-large;
+    font-weight: 700;
+}
+
+.mat-toolbar.mat-primary {
+    background: cadetblue;
+    color: #fff;
+    z-index: 1000;
+    top: 0;
+    position: sticky;
+}
+.route{
+    font-size: larger;
+    font-weight: bold;
+    padding: 15px;
+}
+.success{
+    background: greenyellow !important;
+  }
+.routePadd{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.logoutBtn{
+    background-color:#264a43;
+    border-radius: 50px;
+}
+.homeicon{
+    padding-left: 2%;
+    padding-right: 7px;
+    color: crimson;
+}
+.routePath{
+    background-color: beige;
+    margin-top: -1%;
+    padding-top: 1%;
+}

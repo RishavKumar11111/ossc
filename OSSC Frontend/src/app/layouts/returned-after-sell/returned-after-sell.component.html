@@ -1,0 +1,91 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Returned data list</h4>
+                        <p class="card-category">Fill the fields</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4>Returned Data Instrument Number:</h4>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance='fill'>
+                                    <mat-label>Enter Instrument No.</mat-label>
+                                    <input matInput [(ngModel)]='instrumentNo' [disabled]='topHeadDisable'>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <button mat-raised-button class="btn btn-success" (click)='onSubmit()'>Search</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row justify-content-center" *ngIf="tableShow">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body shadow">
+
+                        <div class="row justify-content-center">
+
+
+
+                            <div class="row headColor" *ngIf='allSaleReturnTableShow'>
+                                <div class="col-md-12 heading">
+                                    <h3>Purchase Return Details</h3>
+                                </div>
+                            </div>
+                            <div class="table-responsive borderBottom" *ngIf='allSaleReturnTableShow'>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>Lot Number</th>
+                                            <th>Season </th>
+                                            <th>Crop </th>
+                                            <th>Variety</th>
+                                            <th>Class</th>
+                                            <th>Party Name</th>
+                                            <th>Purchase Return Date</th>
+                                            <th>Number of Bags</th>
+                                            <th>Bag size(In KG)</th>
+                                            <!-- <th>Quintals</th> -->
+                                            <!-- <th>PR Number</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr *ngFor='let x of allSaleReturnData'>
+                                            <td>{{x.year}}</td>
+                                            <td>{{x.lot_Number}}</td>
+                                            <td>{{x.season}}</td>
+                                            <td>{{x.cropName}}</td>
+                                            <td>{{x.varietyName}}</td>
+                                            <td>{{x.class}}</td>
+                                            <td>{{x.partyName}}</td>
+                                            <td>{{x.date_Intake}}</td>
+                                            <td>{{x.no_of_Bag}}</td>
+                                            <td>{{x.qty_Per_Bag_Kg}}</td>
+                                            <!-- <td>{{x.no_of_Bag|quintals:x.qty_Per_Bag_Kg}}</td> -->
+                                            <!-- <td>{{seed.pr_Number}}</td> -->
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

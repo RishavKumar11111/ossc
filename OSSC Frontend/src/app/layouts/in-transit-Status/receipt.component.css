@@ -1,0 +1,82 @@
+.main-content{
+    /* padding-top:35px */
+}
+.col-md-8 h2,.col-md-4{
+    text-align: right;
+    padding-right: 6%;
+}
+
+.col-md-6 button{
+    text-align: center;
+}
+.col-md-6{
+    text-align: center;
+}
+.card-body .noData{
+    margin-left: 46%;
+}
+
+.cardView{
+    text-align: center;
+}
+
+td button{
+    color: white;
+    background-color: green;
+}
+
+.card .card-header{
+    box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(244, 67, 54, 0.4);
+    border-radius: 3px;
+    margin-top: -20px;
+    padding: 21px;
+}
+
+.card-body mat-header-cell{
+    font-size: medium;
+    font-weight: 600;
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    overflow-x: auto;
+    
+}
+.table-responsive:hover{
+    overflow-x: auto;
+ }
+
+ .card .card-header{
+     background-color: #395e63;
+ }
+
+ .card .card-header h4{
+     color: white;
+ }
+.table-responsive .mat-table {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1rem;
+        display: table;
+        border-collapse: collapse;
+        margin: 0px;
+    }
+.table-responsive  .mat-row, .mat-header-row {
+        display: table-row;
+    }
+    .table-responsive  .mat-cell,
+    .mat-header-cell {
+        word-wrap: initial;
+        display: table-cell;
+        padding: 0px 5px;
+        line-break: unset;
+        width: auto;
+        white-space: nowrap;
+        overflow: hidden;
+        vertical-align: middle;
+    }
+
+
+    

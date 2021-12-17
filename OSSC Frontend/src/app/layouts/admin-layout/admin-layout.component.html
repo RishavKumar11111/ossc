@@ -1,0 +1,23 @@
+<mat-toolbar color="primary">
+    <span>OSSC</span>
+    <span style="flex: 1 1 auto;"></span>
+    <button (click)='logout()' *ngIf='logoutButton' class="btn b-btn logoutBtn" mat-button>Logout</button>
+</mat-toolbar>
+<div class="wrapper">
+    <div class="sidebar" data-color="danger" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+        <app-sidebar></app-sidebar>
+        <div class="sidebar-background"></div>
+    </div>
+    <div class="main-panel">
+        <app-navbar></app-navbar>
+        <div class="route">
+            <div class="row routePath">
+                <i class="material-icons homeicon">home</i>
+                <!-- <p class="routePadd">></p> -->
+                <p>{{route}}</p>
+            </div>
+        </div>
+        <router-outlet></router-outlet>
+    </div>
+
+</div>

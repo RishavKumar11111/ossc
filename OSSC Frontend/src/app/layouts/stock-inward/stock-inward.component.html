@@ -1,0 +1,282 @@
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</head>
+
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Godown Stock Inward Statements</h4>
+                        <p class="card-category">Select the fields</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <mat-form-field appearance='fill'>
+                                    <mat-label>Select SPO</mat-label>
+                                    <mat-select [(value)]="selected" [disabled]='disableSpoDrpdn'>
+                                        <mat-option *ngFor="let allSPO of allSPOs" [value]='allSPO.spo_Name'
+                                            (click)="loadDistricts(allSPO)">
+                                            {{allSPO.spo_Name}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-3">
+                                <mat-form-field appearance='fill'>
+                                    <mat-label>Select District</mat-label>
+                                    <mat-select [(value)]="selectedDist">
+                                        <mat-option *ngFor="let district of allDistricts" [value]='district.dist'
+                                            (click)='getDistData(district)'>
+                                            {{district.dist}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+
+                        <button mat-raised-button class="btn btn-success pull-right" (click)='loadAllData()'
+                            [disabled]='searchBtnDsbld'>Search</button>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row justify-content-center" *ngIf="tableShow">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body shadow">
+
+                        <div class="row justify-content-center">
+                            <div class="row headColor">
+                                <!-- Search button start -->
+
+                                <div class="col-md-4">
+                                    <div class="search-box">
+                                        <i class="material-icons">search</i>
+                                        <input type="text" class="search-txt" name="" placeholder="search by any field"
+                                            onfocus="this.placeholder = ''"
+                                            onblur="this.placeholder = 'search by any field'" [(ngModel)]='searchLot'>
+                                        <!-- <a class="search-btn">
+                                  <i class="material-icons" >search</i>
+                                </a> -->
+                                    </div>
+                                </div>
+
+                                <!-- Search button end-->
+                                <div class="col-md-4 heading">
+
+                                    <h3>Stock Details</h3>
+                                </div>
+                                <div class="col-md-4">
+                                    <button mat-raised-button class="btn btn-info pull-right " style="margin-top: 10px;
+                                    font-weight: 700;" (click)="exportAsXLSX()"><i class="fa fa-file-excel-o"
+                                            aria-hidden="true"></i><span>&nbsp;</span>
+                                        Excel</button>
+                                    &nbsp;&nbsp;
+                                    <button mat-raised-button class="btn btn-info pull-right " style="margin-top: 10px;
+                                        font-weight: 700;" (click)="printTable('printData')">Print</button>
+                                </div>
+
+
+                            </div>
+                            <!-- <div *ngIf='allDataForReport?false:true'> -->
+                            <!-- <div style="text-align: center;"> -->
+                            <!-- <mat-spinner style="margin:0 auto;" mode="indeterminate"></mat-spinner> -->
+                            <!-- </div> -->
+                            <!-- </div> -->
+
+                            <!-- *ngIf='!godownStockDetails?.length==0' -->
+
+                            <div class="table-responsive borderBottom" *ngIf='allDataForReport?true:false'>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>&nbsp;</th>
+                                            <th colspan="3" class="destinationHead">By Whom Received</th>
+                                            <th>&nbsp;</th>
+                                            <th colspan="3" class="sourceHead">From Whom Received</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                            <th colspan="4" class="lotHead">Particulars of Seeds</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                            <th>&nbsp;</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Sl. No</th>
+                                            <th style="min-width: 150px;">Date of receipt</th>
+                                            <th>Zonal Office</th>
+                                            <th>Godown Name</th>
+                                            <th>Lot Number</th>
+                                            <th>Zonal Office</th>
+                                            <th>Godown Name</th>
+                                            <th>Party Name</th>
+                                            <th>Instrument No</th>
+                                            <th>Instrument Date</th>
+                                            <th>Group</th>
+                                            <th>Crop</th>
+                                            <th>Variety</th>
+                                            <th>Class</th>
+                                            <th>Qty. Dispatched(No. of bags)</th>
+                                            <th>Qty. Received(No. of bags)</th>
+                                            <th>Purchase Return(No. of bags)</th>
+                                            <th>Bag Size</th>
+                                            <th>Circle</th>
+                                            <th>Source Type</th>
+                                            <th *ngIf="userRole==='admin'">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr
+                                            *ngFor="let seed of allDataForReport | filter:searchLot | paginate: { itemsPerPage: 10, currentPage: p };let i=index;">
+                                            <td>{{ 10 * (p - 1) + i+1 }}</td>
+                                            <!-- <td>{{seed.lot_Number}}</td> -->
+                                            <td>{{seed.doc.date_Intake|date:'dd/MM/yyyy'}}</td>
+                                            <td>{{rcvZoneName}}</td>
+                                            <td>{{seed.doc.destinGodownName?seed.doc.destinGodownName:"NA"}}</td>
+                                            <td>{{seed.doc.lot_Number}}</td>
+                                            <td>{{seed.sourceZone}}</td>
+                                            <td>{{seed.doc.sourceGodownName?seed.doc.sourceGodownName:"NA"}}</td>
+                                            <td>{{seed.doc.farmerName || seed.doc.agencyName ||seed.doc.partyName}}</td>
+                                            <td>{{seed.doc.pr_Number ||seed.doc.challan_Number}}</td>
+                                            <!-- <td>{{seed.doc.date_Intake}}</td> -->
+                                            <td>{{seed.doc.prInstrumentDate}}</td>
+                                            <td>{{seed.doc.CropCatg_ID| groupName}}</td>
+                                            <td>{{seed.doc.cropName}}</td>
+                                            <td>{{seed.doc.varietyName}}</td>
+                                            <td>{{seed.doc.class}}</td>
+                                            <td>{{seed.QuantDispatched ?seed.QuantDispatched : 0 }}</td>
+                                            <td>{{seed.QuantDispatched-(seed.QuantReturned ? seed.QuantReturned : 0)}}
+                                            </td>
+                                            <td *ngIf='seed.QuantReturned'><button class="quntRcv"
+                                                    (click)='navToReturnedSale(seed.doc.pr_Number||seed.doc.challan_Number)'>{{seed.QuantReturned}}</button>
+                                            </td>
+                                            <td *ngIf='!seed.QuantReturned'>0</td>
+                                            <!-- <td *ngIf='!seed.saleReturn'>NA</td> -->
+                                            <td>{{seed.doc.qty_Per_Bag_Kg}}</td>
+                                            <!-- <td [hidden]='!seed.saleReturn'>NA</td> -->
+                                            <td>{{zoneName|circle:seed.sourceZone}}</td>
+                                            <td>{{seed.doc.SourceType}}</td>
+                                            <td *ngIf="userRole==='admin'"><button class="btn btn-success deleteBtn"
+                                                    (click)='deletePurchaseData(seed.doc)'>Delete</button></td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+                            <div class="card-footer" *ngIf='allDataForReport?true:false'>
+                                <pagination-controls class="my-pagination text-center" (pageChange)="p = $event">
+                                </pagination-controls>
+                            </div>
+
+                        </div>
+                        <div class="row justify-content-center">
+                            <div *ngIf='godownStockDetails?.length==0' class="noData">
+                                <p>No Data</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <mat-progress-bar *ngIf='allDataForReport?false:true' mode="indeterminate">
+                    </mat-progress-bar>
+                </div>
+            </div>
+
+
+            <!-- Below are for print purpose -->
+
+
+            <div id='headPrint' [hidden]='true'>
+                <div class="row">
+                    <div class="col-md-6" style="text-align: center;">
+                        <h1>OSSC</h1>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>{{fullDate}}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="table-responsive borderBottom" id='printData' [hidden]='true'>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th colspan="3" class="destinationHead">DESTINATION</th>
+                            <th colspan="3" class="sourceHead">SOURCE</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th colspan="4" class="lotHead">LOT INFORMATION</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <th>Sl. No</th>
+                            <th style="min-width: 150px;">Date of receipt</th>
+                            <th>Zonal Office</th>
+                            <th>Godown Name</th>
+                            <th>Zonal Office</th>
+                            <th>Godown Name</th>
+                            <th>Party Name</th>
+                            <th>Instrument No</th>
+                            <th>Instrument Date</th>
+                            <th>Group</th>
+                            <th>Crop</th>
+                            <th>Variety</th>
+                            <th>Class</th>
+                            <th>Qty. Received</th>
+                            <th>Qty. Dispateched</th>
+                            <th>Circle</th>
+                            <th>Source Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let seed of allDataForReport ;let i=index;">
+                            <td>{{ 10 * (p - 1) + i+1 }}</td>
+                            <!-- <td>{{seed.lot_Number}}</td> -->
+                            <td>{{seed.doc.date_Intake|date:'dd/MM/yyyy'}}</td>
+                            <td>{{zoneName}}</td>
+                            <td>{{seed.doc.destinGodownName?seed.doc.destinGodownName:"NA"}}</td>
+                            <td>{{seed.sourceZone}}</td>
+                            <td>{{seed.doc.sourceGodownName?seed.doc.sourceGodownName:'NA'}}</td>
+                            <td>Party Name</td>
+                            <td>{{seed.doc.pr_Number}}</td>
+                            <td>Instrument Date</td>
+                            <td>{{seed.doc.CropCatg_ID}}</td>
+                            <td>{{seed.doc.crop}}</td>
+                            <td>{{seed.doc.variety}}</td>
+                            <td>{{seed.doc.class}}</td>
+                            <td>{{seed.QuantReceived?seed.QuantReceived:0}}</td>
+                            <td>{{seed.QuantDisp?seed.QuantDisp:0}}</td>
+                            <td>{{seed.circle}}</td>
+                            <td>{{seed.doc.SourceType}}</td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

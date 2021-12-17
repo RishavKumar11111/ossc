@@ -1,0 +1,106 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Stock Acknowledgement</h2>
+            </div>
+        </div>
+
+        <div class="row cardView">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Stocks Acknowledgement</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped" *ngIf="showCardData1">
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>Season </th>
+                                            <th>Crop </th>
+                                            <th>Variety</th>
+                                            <th>Class</th>
+                                            <th>Lot Number</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Dispatch Date</th>
+                                            <th>Number of Bags</th>
+                                            <th>KG per bag</th>
+                                            <!-- <th>PR Number</th> -->
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of transitDataForReceive ;let i=index">
+                                            <td>{{data.year}}</td>
+                                            <td>{{data.season}}</td>
+                                            <td>{{data.cropName}}</td>
+                                            <td>{{data.varietyName}}</td>
+                                            <td>{{data.class}}</td>
+                                            <td>{{data.lot_Number}}</td>
+                                            <td>{{data.sourceGodownName}}</td>
+                                            <td>{{data.destinGodownName}}</td>
+                                            <td>{{data.stockTrnsDate|date:'dd/MM/yyyy'}}</td>
+                                            <td>{{data.no_of_Bag}}</td>
+                                            <td>{{data.qty_Per_Bag_Kg}}</td>
+                                            <!-- <td>{{data.pr_Number}}</td> -->
+                                            <td><button data-toggle="modal" data-target="#exampleModal"
+                                                    (click)="receiveModal(i,data.ref_No)">Receive</button></td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                <mat-progress-bar mode="indeterminate" *ngIf='progBar'></mat-progress-bar>
+                                <p *ngIf='noDataShow'>{{noData}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><b>Fill below fields</b></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <mat-form-field appearance='fill'>
+                    <mat-label>Number of bags to be received(*Optional)</mat-label>
+                    <input type="number" matInput #rcvBagNo [(ngModel)]='bagSize' (keyup)='bagsEnteredOnPopup(rcvBagNo.value)'>
+                </mat-form-field>
+                <p *ngIf='bagSizeError' style="color: red;">*Bag size entered is invalid</p>
+
+                <!-- <mat-form-field appearance='fill'>
+                    <mat-label>Stack Name</mat-label>
+                    <input matInput #stackName>
+                </mat-form-field> -->
+
+                <mat-form-field appearance='fill'>
+                    <mat-label>Remark</mat-label>
+                    <input matInput #remark>
+                </mat-form-field>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"
+                    (click)='receiveAction(rcvBagNo.value,remark.value)'>Confirm</button><br>
+
+            </div>
+        </div>
+    </div>
+</div>

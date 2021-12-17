@@ -1,0 +1,212 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Purchase Return</h4>
+                        <p class="card-category">Fill the fields</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <h4>Instrument Number:</h4>
+                            </div>
+                            <div class="col-md-4">
+                                <mat-form-field appearance='fill'>
+                                    <mat-label>Enter here</mat-label>
+                                    <input matInput [(ngModel)]='instrumentNo'>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-4">
+                                <button mat-raised-button class="btn btn-success" (click)='onSubmit()'>Search</button>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <div class="row justify-content-center" *ngIf="tableShow">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body shadow">
+
+                        <div class="row justify-content-center">
+                            <div class="row headColor">
+                                <div class="col-md-12 heading">
+                                    <h3>Purchase Details</h3>
+                                </div>
+                            </div>
+                            <div class="table-responsive borderBottom">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>Lot Number</th>
+                                            <th>Season </th>
+                                            <th>Crop </th>
+                                            <th>Variety</th>
+                                            <th>Class</th>
+                                            <th>Party Name</th>
+                                            <th>Intake Date</th>
+                                            <th>Number of Bags</th>
+                                            <th>Bag size(In KG)</th>
+                                            <!-- <th>Quintals</th> -->
+                                            <!-- <th>PR Number</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr>
+                                            <td>{{saleReturnData.year}}</td>
+                                            <td>{{saleReturnData.lot_Number}}</td>
+                                            <td>{{saleReturnData.season}}</td>
+                                            <td>{{saleReturnData.cropName}}</td>
+                                            <td>{{saleReturnData.varietyName}}</td>
+                                            <td>{{saleReturnData.class}}</td>
+                                            <td>{{saleReturnData.partyName}}</td>
+                                            <td>{{saleReturnData.date_Intake|date:'dd/MM/yyyy'}}</td>
+                                            <td>{{saleReturnData.no_of_Bag}}</td>
+                                            <td>{{saleReturnData.qty_Per_Bag_Kg}}</td>
+                                            <!-- <td>{{saleReturnData.no_of_Bag|quintals:saleReturnData.qty_Per_Bag_Kg}}</td> -->
+                                            <!-- <td>{{seed.pr_Number}}</td> -->
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <br><br>
+
+                            <!--=================================== All Sale Return data============================ -->
+
+                            <div class="row headColor" *ngIf='allSaleReturnTableShow'>
+                                <div class="col-md-12 heading">
+                                    <h3>Purchase Return Details</h3>
+                                </div>
+                            </div>
+                            <div class="table-responsive borderBottom" *ngIf='allSaleReturnTableShow'>
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Year</th>
+                                            <th>Lot Number</th>
+                                            <th>Season </th>
+                                            <th>Crop </th>
+                                            <th>Variety</th>
+                                            <th>Class</th>
+                                            <th>Party Name</th>
+                                            <th>Purchase Return Date</th>
+                                            <th>Number of Bags</th>
+                                            <th>Bag size(In KG)</th>
+                                            <!-- <th>Quintals</th> -->
+                                            <!-- <th>PR Number</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr *ngFor='let x of allSaleReturnData'>
+                                            <td>{{x.year}}</td>
+                                            <td>{{x.lot_Number}}</td>
+                                            <td>{{x.season}}</td>
+                                            <td>{{x.cropName}}</td>
+                                            <td>{{x.varietyName}}</td>
+                                            <td>{{x.class}}</td>
+                                            <td>{{x.partyName}}</td>
+                                            <td>{{x.date_return}}</td>
+                                            <td>{{x.no_of_Bag}}</td>
+                                            <td>{{x.qty_Per_Bag_Kg}}</td>
+                                            <!-- <td>{{x.no_of_Bag|quintals:x.qty_Per_Bag_Kg}}</td> -->
+                                            <!-- <td>{{seed.pr_Number}}</td> -->
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <p class="pull-right totalBagReturned">Total Bags Returned:<b>{{totalBagsReturned}}</b></p>
+                    </div>
+
+                </div>
+
+                <div class="card">
+                    
+                    <div class="card-body">
+                        <form #purchaseReturnFormm="ngForm" [formGroup]='purchaseReturnForm'>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>No. of bags to be returned:</h6>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Enter Quantity</mat-label>
+                                        <input type="number" formControlName='returnQuan'
+                                            (keyup)='quanCheck($event.target.value)'
+                                            matInput [(ngModel)]='returnedQuan'>
+                                    </mat-form-field>
+                                    <div
+                                        *ngIf='purchaseReturnForm.get("returnQuan").invalid && (purchaseReturnForm.get("returnQuan").dirty || purchaseReturnForm.get("returnQuan").touched)'>
+                                        <div *ngIf='purchaseReturnForm.get("returnQuan").errors.required' class="alert">
+                                            *Quantity Required
+                                        </div>
+                                    </div>
+                                    <div class="alert" *ngIf='errMsg'>
+                                        *Should be less than or equal to no. of bags ie. {{availableBag}}
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Choose a date of return</mat-label>
+                                        <input matInput disabled [min]="minDate" [max]="maxDate" formControlName='date'
+                                            [(ngModel)]='selectedDate' [matDatepicker]="picker">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker disabled="false"></mat-datepicker>
+                                    </mat-form-field>
+                                    <div
+                                        *ngIf='purchaseReturnForm.get("date").invalid && (purchaseReturnForm.get("date").dirty || purchaseReturnForm.get("date").touched)'>
+                                        <div *ngIf='purchaseReturnForm.get("date").errors.required' class="alert">
+                                            *Date Required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col md-3">
+                                    <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Challan No</mat-label>
+                                        <input matInput [(ngModel)]='challan_No' formControlName='challan_No'>
+                                    </mat-form-field>
+                                    <div
+                                        *ngIf='purchaseReturnForm.get("challan_No").invalid && (purchaseReturnForm.get("challan_No").dirty || purchaseReturnForm.get("challan_No").touched)'>
+                                        <div *ngIf='purchaseReturnForm.get("challan_No").errors.required' class="alert">
+                                            *Challan No. Required
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <button mat-raised-button class="btn btn-success pull-right" (click)='finalSubmit()'
+                            [disabled]='!purchaseReturnForm.valid'>Submit</button>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf='showReferSpo' class="referSpo">
+    <p>*You should contact to <b>{{referSPO}}</b> spo for the instrument number</p>
+</div>

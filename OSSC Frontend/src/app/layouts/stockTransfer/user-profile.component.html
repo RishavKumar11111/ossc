@@ -1,0 +1,437 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <div class="row">
+              <h4 class="card-title" style="margin-left: 1%;">Stock Transfer</h4><br>
+              <span style="flex: 1 1 auto;"></span>
+              <div style="display: flex;margin-right: 1%;cursor: pointer;">
+                <i class="fa fa-shopping-bag" style="float: right;font-size: xx-large" aria-hidden="true"
+                  data-toggle="modal" data-target="#viewModal"></i>
+                <span style="text-align: center;"
+                  class=" counter counter-lg">{{transferBagTotalItems?transferBagTotalItems:0}}</span>
+              </div>
+            </div>
+            <p class="card-category">Fill the fields</p>
+
+          </div>
+          <div class="card-body">
+            <form #transferForm="ngForm" [formGroup]='formDataForTransfer' enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="row fromHeading">
+                    From
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">District<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select District</mat-label>
+                        <mat-select formControlName='distSelected' name='dtS'>
+                          <mat-option *ngFor='let dist of allDistricts' [value]='dist.dist'
+                            (click)='loadGodown(dist.dist)'>
+                            {{dist.dist}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Godown<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select Godown</mat-label>
+                        <mat-select formControlName='godownSelected' name='gd'>
+                          <!-- <mat-option *ngFor='let godown of allGodowns' [value]='godown' (click)='loadLot(godown)'> -->
+                          <mat-option *ngFor='let godown of allGodowns' [value]='godown' (click)='loadCrop(godown)'>
+                            {{godown.godown_Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Crop<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select Crop</mat-label>
+                        <mat-select name='gd' formControlName='crop'>
+                          <mat-option *ngFor='let crop of allCrop' (click)='loadVariety(crop)' [value]='crop.Crop_Code'>
+                            {{crop.Crop_Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Variety<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select Variety</mat-label>
+                        <mat-select name='gd' formControlName='variety'>
+                          <mat-option *ngFor='let variety of allVarieties' [value]='variety.Variety_Code'
+                            (click)='loadLot(variety)'>
+                            {{variety.Variety_Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Select Lot<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select Lot</mat-label>
+                        <mat-select formControlName='lotSelected' name='lt'>
+                          <mat-option *ngFor='let lot of allLot' [value]='lot' (click)='loadNoOfBags(lot.variety)'>
+                            {{lot.lot_Number}}
+                            <!-- &nbsp;&nbsp;&nbsp;(Variety-{{lot.varietyName}}) -->
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Number of bags<a style="color: red;">*</a></h4>
+                      <mat-hint *ngIf='totalkgTrFl' class="perBagSize">*Size of Bag is {{bagPerKgAtBagAvailable}}Kg
+                      </mat-hint>
+
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill' >
+                        <mat-label>Enter No of Bags</mat-label>
+                        <input type="number"  matInput formControlName='noOfBagsEntered' name='bagQuan'
+                          (keyup)='bagNoEntered($event.target.value)'>
+                      </mat-form-field>
+                      <mat-hint *ngIf='totalkgTrFl' class="bagSize">*Number of Bags should be less than or equal to
+                        <strong>{{totalKg}}</strong>
+                      </mat-hint>
+                      <mat-hint *ngIf='totalkgTrF2' style="color: red;">No Bags Available</mat-hint>
+                      <mat-hint *ngIf='totalkgTrF3' style="color: red;">*Not allowed</mat-hint>
+                    </div>
+
+                  </div>
+
+                  <button style="float: right;margin-right: 1%;border-radius: 50px;" type="button"
+                    [disabled]='!formDataForTransfer.value.lotSelected || !formDataForTransfer.value.noOfBagsEntered'
+                    mat-raised-button (click)='getTransferDataArray()' class="btn btn-info">Add Lot to bag
+                  </button>&nbsp;&nbsp;
+
+                </div>
+
+                <!--===================================== Write To godown below================================= -->
+                <div class="col-md-6 outline">
+                  <div class="row fromHeading">
+                    To
+                  </div>
+                  <div class="row">
+
+                    <!-- <div class="col-md-6">
+                      <h4 style="text-align: center;">Select Circle<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <h4>Intra Circle <input type="checkbox" id='intra' formControlName='intraCheck'
+                              (change)='toCheckForTrans()'></h4>
+                        </div>
+                        <div class="col-md-6">
+                          <h4>Inter Circle <input type="checkbox" id='inter' formControlName='interCheck'
+                              (change)='toCheckForTrans()'></h4>
+                        </div>
+
+                      </div>
+
+
+                    </div> -->
+
+
+
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">ZM<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select ZM</mat-label>
+                        <!--for checkbox purpose= [disabled]='toTransferIntra' -->
+                        <mat-select formControlName='spoSelected' name='spS'>
+                          <mat-option *ngFor='let spo of allSPOs' [value]='spo' (click)='loadToDist()' selected>
+                            {{spo.spo_Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+
+
+
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">District<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select District</mat-label>
+                        <mat-select formControlName='toDistSelected' name='dstS'>
+                          <mat-option *ngFor='let dist of toDistricts' [value]='dist' (click)='loadToGodown(dist.dist)'>
+                            {{dist.dist}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <h6 *ngIf='circleTypeShow'>*{{circleType}}</h6>
+                    </div>
+
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Godown<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>Select Godown</mat-label>
+                        <mat-select formControlName='toGodownSelected' name='toGDS'>
+                          <mat-option *ngFor='let godown of loadToGodowns' [value]='godown'>
+                            {{godown.godown_Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Transfer Date<a style="color: red;">*</a></h4>
+                    </div>
+                    <div class="col-md-6">
+                      <!-- <mat-form-field appearance='fill'>
+                        <mat-label>Select Godown</mat-label>
+                        <mat-select formControlName='toGodownSelected' name='toGDS'>
+                          <mat-option *ngFor='let godown of loadToGodowns' [value]='godown'>
+                            {{godown.godown_Name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field> -->
+                      <mat-form-field class="example-full-width" appearance="fill">
+                        <mat-label>Choose a date</mat-label>
+                        <input matInput disabled formControlName='transferDate' [matDatepicker]="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker touchUi disabled="false"></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6">
+                      <h4 style="text-align: center;">Vehicle Number</h4>
+                    </div>
+                    <div class="col-md-6">
+                      <mat-form-field appearance='fill'>
+                        <mat-label>*Optional</mat-label>
+                        <input matInput formControlName='vehicleNo' name='vchNo' onfocus="this.value=''" value="value">
+                      </mat-form-field>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <button style="float: right;" mat-raised-button
+                [disabled]='!transferBagTotalItems || !formDataForTransfer.valid' class="btn btn-success"
+                data-toggle="modal" data-target="#viewModal">Transfer</button>
+
+              <!-- [disabled]='!formDataForTransfer.valid' -->
+
+              <div class="clearfix"></div>
+            </form>
+            <h5 *ngIf='greaterKgValue'>*Enter Number Of Bags less than or equal to {{totalKg}}</h5>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- <button (click)='manualPrint()'>Print</button> -->
+
+<!-- ==================================Print After Stock Transfer Start==================================-->
+
+
+
+<div class="row" [hidden]='true'>
+  <div class="col-md-12 text-right mb-3">
+    <!-- <button class="btn btn-primary" id="download" (click)='downloadPDF()'> download pdf</button> -->
+    <button class="btn btn-primary" (click)='print()'>Print</button>
+  </div>
+</div>
+<div [hidden]='true'>
+
+  <table id='printTable' class="wrapper" cellpadding="0" cellspacing="0">
+    <table class="innerTable" *ngIf='printDataShow'>
+      <tr>
+        <td>
+          <table>
+            <tr>
+              <div class="topHeadDiv">
+                <p>PAN NO: {{dataForPrint[0].panNo}}</p>
+                <p>GSTIN NO: {{dataForPrint[0].gstinNo}}</p>
+              </div>
+              <div class="sub-heading"><b><i>Odisha State Seeds Corporation Limited</i></b></div>
+              <small>(A GOVERNMENT UNDER TAKING)</small><br>
+              <small>Regd. Office:Bhubaneswar- 751002</small>
+            </tr><br><br><br>
+            <tr>
+              <td colspan="3" width="500" class="content"><span>Zonal
+                  Office____<u>{{dataForPrint[0].zonalOffice}}</u>_______</span></td>
+              <td width="150" class="content"><span>No: </span></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <div class="sub-heading" align='center'>
+                <b>MATERIAL TRANSFER CHALLAN</b>
+              </div>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <table>
+            <tr>
+              <td width="350" class="content">Book No______________<br>Despatched
+                from_____<u>{{dataForPrint[0].sourceGodownName}}</u>_________<br>Despatched
+                to_______<u>{{dataForPrint[0].destinGodownName}}</u>______</td>
+              <td width="200" style="vertical-align: text-top;"></td>
+              <td width="250" class="content">Challan
+                No_<u>{{dataForPrint[0].commonChallanForGodownTrns}}</u>_<br>Date_____<u>{{dataForPrint[0].stockTrnsDate|date:'dd/MM/yyyy'}}</u>________<br>Vehicle
+                No_____<u *ngIf='dataForPrint[0].vehicleNO'>{{dataForPrint[0].vehicleNO}}</u>_____</td>
+            </tr>
+          </table>
+
+          <table style="width: 100%;">
+            <tr>
+              <td>
+                <table style="width:100%" class="maintbl" cellpadding="0" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Sl.</th>
+                      <th colspan="3">Particulars of Commodity</th>
+                      <th>No. of Unit</th>
+                      <th>Qty per Unit</th>
+                      <th>Total <br> Weight Net <br> Kg./gms/</th>
+                      <th>Remarks <br> condition of Bag Lot No. etc</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr style="height: 114px !important;" *ngFor='let y of dataForPrint;let i=index'>
+                      <td>{{i+1}}</td>
+                      <td style="border-right: none;">&nbsp;</td>
+                      <td style="border-right: none;
+                           border-left: none;">Lot
+                        No:{{y.lot_Number}}<br>Crop:{{y.cropName}}<br>Variety:{{y.varietyName}}
+                      </td>
+                      <td style="border-left: none;">&nbsp;</td>
+                      <td>{{y.no_of_Bag}}</td>
+                      <td>{{y.qty_Per_Bag_Kg}}</td>
+                      <td>{{y.no_of_Bag*y.qty_Per_Bag_Kg}}</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table><br>
+                <table>
+                  <tr>
+                    <td width="350" class="content footerContent">Issued by:{{dataForPrint[0].sourceDist}}
+                      SPO<br>Designation & Date:{{dataForPrint[0].transferDataPushedDate|date:'dd/MM/yyyy'}}</td>
+                    <td width="350" class="content rightContent">Received By:{{dataForPrint[0].destinDist}}
+                      SPO<br>Designation & Date:</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </table>
+
+</div>
+
+
+
+<!-- ==================================Print After Stock Transfer End==================================-->
+
+
+
+
+<!-- ===================================Transfer view modal start============================================================ -->
+<div class="modal fade" id="viewModal" tabindex="1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document1">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title" id="ModalLabel">Stock Transfer Data</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="text-align: center;" *ngIf='transferDataArray.length==0'>No Data</p>
+        <table class="table table-bordered table-striped" *ngIf='transferDataArray.length!=0'>
+          <thead class="bg-light ">
+            <tr class="border-1">
+              <th>Sl.</th>
+              <!-- <th>Dist</th>
+              <th>Source Godown</th> -->
+              <th>Lot No.</th>
+              <th>No. of bags</th>
+              <!-- <th>Zm</th>
+              <th>District</th>
+              <th>Destination Godown</th> -->
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let x of transferDataArray; index as i ">
+              <td>{{ i + 1 }}</td>
+              <!-- <td>{{x.distSelected}}</td>
+              <td>{{x.godownSelected.godown_Name}}</td> -->
+              <td>{{x.lotSelected.lot_Number}}</td>
+              <td>{{x.noOfBagsEntered}}</td>
+              <!-- <td>{{x.spoSelected.spo_Name}}</td>
+              <td>{{x.toDistSelected.dist}}</td>
+              <td>{{x.toGodownSelected.godown_Name}}</td> -->
+              <td><button class="btn btn-danger deleteBtn" (click)='deleteFromTransArray(i)'>Delete</button></td>
+            </tr>
+          </tbody>
+
+        </table>
+      </div>
+      <div class="modal-footer" *ngIf='transferDataArray.length!=0'>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)='onSubmit()'
+          [disabled]='!formDataForTransfer.valid'>Transfer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================Transfer view modal end============================================================ -->
+
+<!-- ===================================Loader view start============================================================ -->
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="square-jelly-box" [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>
+<!-- ===================================Loader view end============================================================ -->

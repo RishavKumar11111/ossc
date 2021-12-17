@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_","ns":"OSSC.godownMaster"}],"uuid":"8c59060ed1c5454e9dbb2d3523f8c235"}

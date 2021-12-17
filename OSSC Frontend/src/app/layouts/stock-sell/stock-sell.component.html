@@ -1,0 +1,341 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <form #formForSale="ngForm" [formGroup]='formDataForSale' (ngSubmit)='onSubmit()'
+                    enctype="multipart/form-data">
+                    <div class="card">
+                        <div class="card-header card-header-danger">
+                            <h4 class="card-title">Stock Sale</h4>
+                            <p class="card-category">Fill the fields</p>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="row">
+
+
+
+                                <div class="col-md-3 box">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Sale to whom</mat-label>
+                                        <mat-select formControlName='toWhomSale' name='gd'>
+                                            <mat-option *ngFor='let toWhom of toWhomSale' [value]='toWhom.name'>
+                                                {{toWhom.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+
+
+
+                                <div class="col-md-3 box">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>ID Type</mat-label>
+                                        <mat-select formControlName='idType' name='gd'>
+                                            <mat-option *ngFor='let idType of idTypes' [value]='idType'>
+                                                {{idType}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+
+
+
+                                <div class="col-md-3 box">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>ID Number</mat-label>
+                                        <input type="text" matInput formControlName='idNumber'>
+                                    </mat-form-field>
+                                </div>
+
+
+
+
+                                <div class="col-md-3 box">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Name of the party</mat-label>
+                                        <input type="text" matInput formControlName='NameOfParty'>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-md-3 box">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Address</mat-label>
+                                        <input type="text" matInput formControlName='addressOfParty'>
+                                    </mat-form-field>
+                                </div>
+
+
+                                <div class="col-md-3 box">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Lot No.</mat-label>
+                                        <mat-select formControlName='lotNumber' name='gd'>
+                                            <mat-option *ngFor='let lotNumber of lotNumbers'
+                                                [value]='lotNumber._id.lot_Number' (click)='showLotDetails(lotNumber)'>
+                                                {{lotNumber._id.lot_Number}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <br><br>
+
+
+
+                            <div class="row" *ngIf="showCardData1">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Fin Year</th>
+                                                <th>Godown Name</th>
+                                                <th>Season </th>
+                                                <th>Crop </th>
+                                                <th>Variety</th>
+                                                <th>Class</th>
+                                                <th>Lot Number</th>
+                                                <th>Intake Date</th>
+                                                <th>Number of Bags available</th>
+                                                <th>Bag size(In KGs)</th>
+                                                <th>PR No/Challan No</th>
+                                                <th>Certify Status</th>
+                                                <th>Action</th>
+                                                <!-- <th>Action</th> -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{lotDetails.year}}</td>
+                                                <td>{{lotDetails.destinGodownName}}</td>
+                                                <td>{{lotDetails.season}}</td>
+                                                <td>{{lotDetails.cropName}}</td>
+                                                <td>{{lotDetails.varietyName}}</td>
+                                                <td>{{lotDetails.class}}</td>
+                                                <td>{{lotDetails.lot_Number}}</td>
+                                                <td>{{lotDetails.date_Intake|date:'dd-MM-yyyy'}}</td>
+                                                <td>{{lotDetails.availableBags}}</td>
+                                                <td>{{lotDetails.qty_Per_Bag_Kg}}</td>
+                                                <td>{{lotDetails.instrumentNo?lotDetails.instrumentNo:lotDetails.challan_Number}}
+                                                </td>
+                                                <td>{{lotDetails.cert_Status}}</td>
+                                                <!-- <td><button  data-toggle="modal" data-target="#exampleModal" (click)="receiveModal(i,data.ref_No)">Receive</button></td> -->
+                                                <td><button type="button" (click)="sellButtonClick(lotDetails)"><a
+                                                            href="#section2">Sell</a></button></td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="card" *ngIf='sellInputShow'>
+                        <div class="card-body" id="section2">
+                            <div class="row">
+                                <!-- <div class="col-md-3 qtySoldHead">
+                                    <h4>Qty Sold(In Bags):</h4>
+                                </div> -->
+                                <div class="col-md-3">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Enter Quantity sold in bags</mat-label>
+                                        <input type="number" formControlName='qtySold'
+                                            (keyup)='quanCheck($event.target.value)' matInput>
+                                    </mat-form-field>
+                                    <div
+                                        *ngIf='formDataForSale.get("qtySold").invalid && (formDataForSale.get("qtySold").dirty || formDataForSale.get("qtySold").touched)'>
+                                        <div *ngIf='formDataForSale.get("qtySold").errors.required' class="alert">
+                                            *Quantity Required
+                                        </div>
+                                    </div>
+                                    <div class="alert" *ngIf='errMsg'>
+                                        *Quantity should be less than or equal to No. of bags available
+                                    </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field class="example-full-width" appearance="fill">
+                                        <mat-label>Choose a date</mat-label>
+                                        <input matInput disabled [min]="minDate" [max]="maxDate" formControlName='date'
+                                            [(ngModel)]='selectedDate' [matDatepicker]="picker">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker touchUi disabled="false"></mat-datepicker>
+                                    </mat-form-field>
+                                    <div
+                                        *ngIf='formDataForSale.get("date").invalid && (formDataForSale.get("date").dirty || formDataForSale.get("date").touched)'>
+                                        <div *ngIf='formDataForSale.get("date").errors.required' class="alert">
+                                            *Date Required
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Amount per Quintal</mat-label>
+                                        <input type="number" formControlName='perQuintalPrice' matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>DU No.</mat-label>
+                                        <input type="text" formControlName='duNoForChallan' matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-5">
+                                    <mat-form-field appearance='fill'>
+                                        <mat-label>Remark</mat-label>
+                                        <input type="text" formControlName='remarkForChallan' matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-3 buttonSubmit">
+                                    <button mat-raised-button type="submit" *ngIf='sellInputShow'
+                                        [disabled]='!formDataForSale.valid'
+                                        class="btn btn-success pull-right">Submit</button>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ===========================Print Challan start ========================================== -->
+
+<div [hidden]='true'>
+
+    <table id='printTable' class="wrapper" cellpadding="0" cellspacing="0">
+        <table class="innerTable" *ngIf='printDataShow'>
+            <tr>
+                <div class="head">
+                    <p class="phNo">ଫୋନ୍ ନଂ:0674-2340573</p>
+                    <p class="gstNo">ଜି.ଏସ୍.ଟି.ନଂ:21AAAC06313P12H</p>
+                </div>
+            </tr><br><br>
+            <tr>
+                <div class="head">
+                    <p><small><u>କ୍ୟାସ୍ ମେମୋ</u></small></p>
+                    <p class="mainHead">ଓଡିଶା ରାଜ୍ଯ ବିହନ ନିଗମ ଲିଃ</p>
+                    <p class="subHead">ସାମନ୍ତରାପୁର,ଭୁବନେଶ୍ବର</p>
+                </div>
+            </tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <!-- <td> -->
+                            <td width="350" class="content">ବହି ନଂ______________</td><br>
+                            <td width="200" style="vertical-align: text-top;"></td>
+                            <td width="350" class="content">କ୍ରମିକ ନଂ:_<u>{{dataForPrint[0].ref_No}}</u>_ <br>
+                                ଟ୍ରକ ନଂ:______________
+                                <!-- </td> -->
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <p> କ୍ରେତାଙ୍କ ନାମ___<u>{{dataForPrint[0].NameOfParty}}</u>______</p>
+                            <p> ଠିକଣା____<u>{{dataForPrint[0].addressOfParty}}</u>____</p>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>
+                                <table style="width:100%" class="maintbl" cellpadding="0" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>କ୍ରମିକ ନଂ</th>
+                                            <th colspan="3">ବିହନ କିସମ ଓ ବିବରଣୀ</th>
+                                            <th>ପରିମାଣ</th>
+                                            <th>କ୍ୱିଣ୍ଟାଲ୍
+                                                <br>ପ୍ରତି<br>
+                                                ମୁଲ୍ୟ
+                                            </th>
+                                            <th>ମୋଟ ମୁଲ୍ୟ</th>
+                                            <th>ମନ୍ତବ୍ୟ
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr style="height: 114px !important;"
+                                            *ngFor='let y of dataForPrint;let i=index'>
+                                            <td>{{i+1}}</td>
+                                            <td style="border-right: none;">&nbsp;</td>
+                                            <td style="border-right: none;
+                             border-left: none;">Lot
+                                                No:&nbsp;{{y.lot_Number}}<br>Crop:{{y.cropName}}<br>Variety:{{y.varietyName}} <br><br>
+                                                DU No.:{{y.duNoForChallan}}
+                                            </td>
+                                            <td style="border-left: none;">&nbsp;</td>
+                                            <!-- <td>{{y.no_of_Bag}}</td> -->
+                                            <td>{{(y.no_of_Bag*y.qty_Per_Bag_Kg)/100}}</td>
+                                            <td>{{y.perQuintalPrice}}</td>
+                                            <td>{{((y.no_of_Bag*y.qty_Per_Bag_Kg)/100)*y.perQuintalPrice}}</td>
+                                            <!-- <td>{{y.no_of_Bag*y.qty_Per_Bag_Kg}}</td> -->
+                                            <td>{{y.remarkForChallan}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table><br>
+                                <!-- <table>
+                                    <tr>
+                                        <td width="350" class="content footerContent">Issued
+                                            by:{{dataForPrint[0].sourceDist}}
+                                            SPO<br>Designation &
+                                            Date:{{dataForPrint[0].transferDataPushedDate|date:'dd/MM/yyyy'}}</td>
+                                        <td width="350" class="content rightContent">Received
+                                            By:{{dataForPrint[0].destinDist}}
+                                            SPO<br>Designation & Date:</td>
+                                    </tr>
+                                </table> -->
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <!-- <td> -->
+                            <td width="250" class="content">ସ୍ଥାନ__<u>{{dataForPrint[0].destinDist}}</u>___ <br>
+                                ତାରିଖ:_<u>{{dataForPrint[0].date_Sale|date:'dd-MM-yyyy'}}</u>__</td><br>
+                            <td width="350" class="content">କ୍ରେତାଙ୍କ ସ୍ବାକ୍ଷର:_____________</td>
+                            <td width="350" class="content">ବିକ୍ରେତାଙ୍କ ସ୍ବାକ୍ଷର:_____________</td>
+                            <!-- </td> -->
+                        </tr>
+                    </table>
+                </td>
+            </tr><br><br><br>
+            <tr>
+                <td>
+                    <div class="bottom">
+                        <p class="footer">ବି.ଦ୍ର: ବିହନ ଥରେ ବିକ୍ରୟ ପରେ ଫେରସ୍ତ ନିଆଯିବ ନାହିଁ</p>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </table>
+
+</div>
+
+<!-- ===========================Print Challan end ========================================== -->

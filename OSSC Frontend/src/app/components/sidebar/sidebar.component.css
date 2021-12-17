@@ -1,0 +1,118 @@
+.logo{
+    font-size: xx-large;
+    font-weight: 700;
+    padding-left: 25%;
+    /* color: blue; */
+    background-color: bisque;
+    
+}
+.sidebar-wrapper{
+    /* background-color: aquamarine; */
+    padding-top: 8%;
+
+}
+
+.sidebar-wrapper .nav li a:hover{
+    color:black;
+}
+
+.sidebar-wrapper .nav li a p{
+ color: white;
+}
+.sidebar{
+    position: fixed;
+}
+.nav-item a{
+    color: white;
+    padding-left: 0px;
+    margin-inline-end: auto;
+}
+.nav-item a .submenu{
+    margin-right: 0px;
+}
+ul .nav-item a:hover{
+    color: white !important;
+}
+.nav-item:hover{
+  color: white;
+}
+ul li .reportButton{
+    padding-right: 45%;
+    margin: 0;
+    line-height: 30px;
+    font-size: 14px;
+    position: relative;
+    display: flex;
+    height: auto;
+    white-space: nowrap;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+ul li .reportButton{
+    margin-top: 7%;
+}
+
+.reportButton{
+    cursor: pointer;
+}
+.reportButton p{
+    padding-right: 73%;
+    padding-left: 16%;
+}
+
+.reportButton i{
+    margin-right: 0px;
+    margin-left: -11%;
+}
+
+.reportButton span{
+    margin-top: 14px;
+}
+
+.sidebar-wrapper .nav li ul li{
+    line-height: 26px;
+    border-bottom: none;
+}
+
+.sidebar-wrapper{
+    background-color: black;
+}
+.sidebar-wrapper .nav li ul{
+    position: static;
+    display: none;
+}
+.sidebar-wrapper .nav li .rprtShow.show{
+  display: block;
+}
+ul li .reportButton.clr{
+    background-color: black;
+}
+
+
+.sidebar-wrapper .nav li{
+    position: relative;
+}
+li span{
+font-size: 100px;
+transform: translateY(-50%);
+font-size: 22px;
+transition:transform 0.4s;
+}
+li span.spin{
+    color: red;
+    transform: translateY(-50%) rotate(-180deg);
+
+}
+
+.rprtShow li{
+    padding-top: 14px;
+}
+
+.space{
+    flex: 1 1 auto;
+}
+
+.fa-arrow-up {
+    color: white;
+}

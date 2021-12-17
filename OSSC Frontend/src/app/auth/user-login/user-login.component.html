@@ -1,0 +1,131 @@
+<!-- <div class="main">
+
+
+    <div class="row">
+        <div class="col-md-12">
+
+
+            <div class="container">
+                <div class="middle">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="logo">OSSC
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="login">
+
+                                <form [formGroup]='loginForm' (ngSubmit)='onSubmit()'>
+
+                                    <fieldset class="clearfix">
+
+                                        <p><span class="fa fa-user"></span><input type="text" Placeholder="Username"
+                                                formControlName='userName'></p>
+
+                                        <div *ngIf='userName.invalid && (userName.dirty || userName.touched)'>
+                                            <div *ngIf='userName.errors.required' class="alerterr">
+                                                *User Name required
+                                            </div>
+                                        </div>
+
+                                        <p><span class="fa fa-lock"></span><input type="password" Placeholder="Password"
+                                                formControlName='password'>
+                                        </p>
+
+                                        <div *ngIf='password.invalid && (password.dirty || password.touched)'>
+                                            <div *ngIf='password.errors.required' class="alerterr">
+                                              *Password required
+                                            </div>
+                                          </div>
+
+                                        <div>
+                                            <span style="width:48%; text-align:left;  display: inline-block;"><a
+                                                    class="small-text" href="#">Forgot
+                                                    password?</a></span>
+                                            <span style="width:50%; text-align:right;  display: inline-block;"><input
+                                                    type="submit" value="Sign In"></span>
+                                        </div>
+
+                                    </fieldset>
+                                    <div class="clearfix"></div>
+                                </form>
+
+                                <div class="clearfix"></div>
+
+                            </div> 
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div> -->
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<mat-toolbar color="primary">
+    <span>OSSC</span>
+</mat-toolbar>
+
+<div class="b-bg-image py-5" style="padding-bottom: 200px!important">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 d-flex b-heading-sec">
+                <div class="align-self-center pr-5 b-head-in">
+                    <h1 class=" mt-5 b-left-head">Odisha State Seed Corporation</h1>
+                </div>
+            </div>
+
+
+            <div class="col-lg-6 b-login-sec">
+                <div class="d-block px-5 pt-5 pb-4 border-bottom-0">
+                    <h2 class="b-login-head">Log In</h2>
+                </div>
+
+                <div class="">
+                    <form [formGroup]='loginForm' (ngSubmit)='onSubmit()'>
+                        <div class="form-group ">
+                            <label for="login-email-1" class="text-white">Email:</label>
+                            <input type="email" formControlName='userName' class="form-control" id="login-email-1"
+                                placeholder="Enter email" name="login-email">
+                            <div *ngIf='userName.invalid && (userName.dirty || userName.touched)'>
+                                <div *ngIf='userName.errors.required' class="alert alert-danger">
+                                    *Email Required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-pwd-1" class="text-white">Password:</label>
+                            <input type="password" formControlName='password' class="form-control" id="login-pwd-1"
+                                placeholder="Enter password" name="login-pwd">
+                            <div *ngIf='password.invalid && (userName.dirty || password.touched)'>
+                                <div *ngIf='password.errors.required' class="alert alert-danger">
+                                    *Password Required
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group custom-control custom-checkbox">
+                            <input class="custom-control-input" id="login-rem-1" type="checkbox" name="remember">
+                            <label class="custom-control-label text-white" for="login-rem-1">Remember me</label>
+                        </div>
+
+
+                        <!-- <p class="text-right b-notreg ">Don't have an account? <a href="">Sign Up</a></p> -->
+                        <div class="text-center py-4">
+                            <button type="submit" class="btn btn-primary b-btn" [disabled]='!loginForm.valid'>Log In</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
